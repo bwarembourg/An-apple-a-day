@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 5fffcb34675dc479cabce8e173ff80e1
+guid: 23aa7743f1d544c90ba0fa9812c3f4b1
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -140,13 +140,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pig nose idle_0
+      name: poo_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 96
-        width: 64
-        height: 96
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -154,20 +154,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e853051ec81f343658d460db48cc8731
-      internalID: -1890525041
+      spriteID: 988c2f66ff8944db4804e9ff56693057
+      internalID: 1046931371
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pig nose idle_1
+      name: poo_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 96
-        width: 64
-        height: 96
+        x: 32
+        y: 32
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -175,20 +175,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: abfd0aaff6ebc4abf82217d1b7f875e9
-      internalID: -1194914171
+      spriteID: ea5245be1ffde43388487c2c71c709ec
+      internalID: 1760652736
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pig nose idle_2
+      name: poo_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 64
-        height: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -196,20 +196,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f9712ec4dda5b4a22a80845a7245c02e
-      internalID: 2116215139
+      spriteID: c3cd33f4cf8904a7a80c2b075b2391dc
+      internalID: 891637703
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: pig nose idle_3
+      name: poo_3
       rect:
         serializedVersion: 2
-        x: 64
+        x: 32
         y: 0
-        width: 64
-        height: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -217,8 +217,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d99f1aae691634e298bd9ed1dad1bb27
-      internalID: -970030961
+      spriteID: ca60253c9094f4ef0b764f047db19dfc
+      internalID: 1252585562
       vertices: []
       indices: 
       edges: []
@@ -234,10 +234,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      pig nose idle_2: 2116215139
-      pig nose idle_1: -1194914171
-      pig nose idle_0: -1890525041
-      pig nose idle_3: -970030961
+      poo_2: 891637703
+      poo_3: 1252585562
+      poo_0: 1046931371
+      poo_1: 1760652736
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
