@@ -3,7 +3,10 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - bad
+  - apple
+  - coin
   layers:
   - Default
   - TransparentFX
@@ -46,4 +49,7 @@ TagManager:
     locked: 0
   - name: ui
     uniqueID: 3258196161
+    locked: 0
+  - name: uistate
+    uniqueID: 3118447501
     locked: 0

@@ -6,20 +6,14 @@ public class Clouds : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer cloud;
     [SerializeField] private Sprite[] sprites;
+    [SerializeField] float[] ys;
+    [SerializeField] private float maxTimer = 1f;
+    [SerializeField] float x;
 
     private List<SpriteRenderer> clouds = new List<SpriteRenderer>();
-    private List<float> ys = new List<float>();
     private float timer = 0f;
-    private float maxTimer = 1f;
     private float speed = 5f;
 
-    private void Start()
-    {
-        ys.Add(4.5f);
-        ys.Add(3.5f);
-        ys.Add(2.5f);
-        ys.Add(1.5f);
-    }
 
     private void Update()
     {
@@ -27,8 +21,8 @@ public class Clouds : MonoBehaviour
         if (timer >= maxTimer)
         {
             timer = 0f;
-            float y = ys[Random.Range(0, ys.Count)];
-            SpriteRenderer cloudGo = Instantiate(cloud, new Vector3(-8f, y, 0), Quaternion.identity, transform);
+            float y = ys[Random.Range(0, ys.Length)];
+            SpriteRenderer cloudGo = Instantiate(cloud, transform.position + new Vector3(x, y, 0), Quaternion.identity, transform);
             cloudGo.sprite = sprites[Random.Range(0, sprites.Length)];
             clouds.Add(cloudGo);
         }

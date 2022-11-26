@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1859849253559500702}
   - component: {fileID: 1859849253559500697}
   - component: {fileID: 1859849253559500696}
+  - component: {fileID: 8132849325363282796}
   m_Layer: 0
   m_Name: apple red
-  m_TagString: Untagged
+  m_TagString: apple
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,3 +106,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8132849325363282796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859849253559500699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebf337c82afdc440ea6f3e8450b711ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: A
