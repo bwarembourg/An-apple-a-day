@@ -11,6 +11,7 @@ public class Goal : MonoBehaviour
     [SerializeField] private Sprite orange;
     [SerializeField] private Sprite green;
     [SerializeField] private Sprite yellow;
+    [SerializeField] private Transform goalPanel;
 
     private List<GameObject> icons = new List<GameObject>();
     private string goals;
@@ -32,6 +33,9 @@ public class Goal : MonoBehaviour
             GameObject icon = Instantiate(appleIcon, transform.position + new Vector3(posX, 0, 0), Quaternion.identity, transform);
             icon.GetComponent<SpriteRenderer>().sprite = GetSprite(goals[i]);
             icons.Add(icon);
+            GameObject iconPanel = Instantiate(appleIcon, goalPanel.position + new Vector3(posX, 0, 0), Quaternion.identity, goalPanel);
+            iconPanel.GetComponent<SpriteRenderer>().sprite = GetSprite(goals[i]);
+            icons.Add(iconPanel);
             posX += 1f;
         }
     }

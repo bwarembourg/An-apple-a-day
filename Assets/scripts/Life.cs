@@ -25,7 +25,7 @@ public class Life : MonoBehaviour
 
     private void Update()
     {
-        if (Level.current.state != State.GAME)
+        if (Level.current.state != State.GAME || Level.current.tuto)
             return;
         timer += Time.deltaTime;
         if (timer >= maxTimer)
@@ -45,11 +45,10 @@ public class Life : MonoBehaviour
     {
         if (life > 0)
             life -= 5;
-        Debug.Log(life);
         if (life <= 0)
         {
             life = 0;
-            GameOver.current.DoGameOver();
+            GameOver.current.DoGameOver(Reason.NOT_ENOUGH);
         }
         UpdateDisplay();
     }
@@ -61,7 +60,7 @@ public class Life : MonoBehaviour
         if (life >= 100)
         {
             life = 100;
-            GameOver.current.DoGameOver();
+            GameOver.current.DoGameOver(Reason.TOO_MUCH);
         }
         UpdateDisplay();
     }
@@ -72,7 +71,7 @@ public class Life : MonoBehaviour
             life -= 10;
         if (life <= 0)
         {
-            GameOver.current.DoGameOver();
+            GameOver.current.DoGameOver(Reason.NOT_ENOUGH);
             life = 0;
         }
         UpdateDisplay();

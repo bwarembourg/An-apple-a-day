@@ -16,6 +16,7 @@ public class Font : MonoBehaviour
     private float spacing = 6f/16f;
     private float interline = 9f/16f;
 
+
     private void Awake()
     {
         current = this;
@@ -29,9 +30,13 @@ public class Font : MonoBehaviour
             //text = Translation.current.GetString(text);
         }
         List<SpriteRenderer> fontItems = new List<SpriteRenderer>();
-        if (maxX > 0f)
+        if (maxX != 0f)
         {
-            float lineSize = maxX - x;
+            float lineSize;
+            if (maxX > x)
+                lineSize = Mathf.Abs(maxX - x);
+            else
+                lineSize = Mathf.Abs(x - maxX);
             int nbCharsPerLines = Mathf.CeilToInt((float) lineSize / (float) spacing);
             int nbLines = Mathf.CeilToInt((float) text.Length / (float) nbCharsPerLines);
             if (nbLines > 1)
@@ -72,9 +77,9 @@ public class Font : MonoBehaviour
     public List<SpriteRenderer> WriteLine(string text, float x, float y, Transform parent, int sortingOrder = 2,
         bool visible = true, bool centered = false, float maxX = 0, string layerName = "ui", bool isMin = false)
     {
-        if (centered && maxX > 0f)
+        if (centered)
         {
-            float center = x + (maxX - x) / 2f;
+            float center = x + ((maxX - x) / 2f);
             float spacingTotal = 0f;
             foreach(char c in text)
             {

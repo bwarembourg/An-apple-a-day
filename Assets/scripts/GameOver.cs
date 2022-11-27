@@ -19,7 +19,8 @@ public class GameOver : MonoBehaviour
 
     private List<SpriteRenderer> appleFont = new List<SpriteRenderer>();
     private List<SpriteRenderer> coinFont = new List<SpriteRenderer>();
-
+    private List<SpriteRenderer> reasonFont = new List<SpriteRenderer>();
+    private Reason reason;
     private void Awake()
     {
         current = this;
@@ -28,18 +29,19 @@ public class GameOver : MonoBehaviour
     private void Start()
     {
         camera = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        List<SpriteRenderer> niceGame = Font.current.Write("Nice game!", -4f, 0.5f, gameOverPanel.transform, 8,
-            true, false, 4f, true, "uistate");
-        niceGame.ForEach(f => f.color = blue);
+
         Font.current.Write("Press any key to start again!", -6f, -4f, pressAnyKey.transform, 8, true, false, 6f, true, "uistate");
     }
 
-    public void DoGameOver()
+    public void DoGameOver(Reason reason)
     {
+        reasonFont.ForEach(f => Destroy(f.gameObject));
+        reasonFont.Clear();
         appleFont.ForEach(f => Destroy(f.gameObject));
         appleFont.Clear();
         coinFont.ForEach(f => Destroy(f.gameObject));
         coinFont.Clear();
+        this.reason = reason;
         Level.current.state = State.GAME_OVER;
         appleBG.Activate();
         gameOverPanel.SetActive(true);
@@ -51,7 +53,7 @@ public class GameOver : MonoBehaviour
         if (Input.anyKeyDown && Level.current.state == State.GAME_OVER && !showing)
         {
             Debug.Log("restart");
-            Level.current.RenderLevel(0);
+            Level.current.RenderLevel(Level.current.currentLevel);
             gameOverPanel.SetActive(false);
             hiding = true;
         }
@@ -63,9 +65,11 @@ public class GameOver : MonoBehaviour
                 showing = false;
                 appleFont = Font.current.Write("x" + Level.current.appleEated, 0, 0.125f - 1f, gameOverPanel.transform, 8, true, false, 0, false, "uistate");
                 appleFont.ForEach(f => f.color = blue);
-                coinFont = Font.current.Write("x" + Level.current.coinCatched, 0, -1.75f, gameOverPanel.transform, 8, true, false, 0, false, "uistate");
+                coinFont = Font.current.Write("x" + Level.current.coinCatched + "/3", 0, -1.75f, gameOverPanel.transform, 8, true, false, 0, false, "uistate");
                 coinFont.ForEach(f => f.color = blue);
-
+                reasonFont = Font.current.Write(GetReasonFont(reason), -3.5f, 0.75f, gameOverPanel.transform, 8,
+                    true, false, 3.5f, true, "uistate");
+                reasonFont.ForEach(f => f.color = blue);
             }
         }
         if (hiding)
@@ -73,10 +77,21 @@ public class GameOver : MonoBehaviour
             camera.position = Vector3.MoveTowards(camera.position, new Vector3(0, 0f, -10f), Time.deltaTime * speed);
             if (Vector3.Distance(camera.position, new Vector3(0, 0f, -10f)) < 0.1f)
             {
-                Level.current.state = State.GAME;
+                camera.position = new Vector3(0, 0f, -10f);
+                Level.current.state = State.INTRO;
                 appleBG.Reset();
                 hiding = false;
             }
+        }
+    }
+
+    private string GetReasonFont(Reason reason)
+    {
+        switch (reason)
+        {
+            case Reason.COINS: return "Not enough coins for Charlie...";
+            case Reason.TOO_MUCH: return "Too much apples for Charlie...";
+            default: return "Not enough apples for Charlie...";
         }
     }
 }

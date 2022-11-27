@@ -10,15 +10,27 @@ public class Level : MonoBehaviour
     [SerializeField] private Animator noseEating;
     [SerializeField] private Animator noseEatingBG;
     [SerializeField] private Transform hand;
+    [SerializeField] private Transform goalPanel;
 
     [Header("ITEMS")]
     [SerializeField] private GameObject redApple;
+    [SerializeField] private GameObject orangeApple;
+    [SerializeField] private GameObject greenApple;
+    [SerializeField] private GameObject yellowApple;
+
     [SerializeField] private GameObject chocolate;
     [SerializeField] private GameObject poo;
     [SerializeField] private GameObject rabbit;
     [SerializeField] private GameObject frog;
+
     [SerializeField] private GameObject rottenRedApple;
+    [SerializeField] private GameObject rottenOrangeApple;
+    [SerializeField] private GameObject rottenGreenApple;
+    [SerializeField] private GameObject rottenYellowApple;
+
     [SerializeField] private GameObject coin;
+
+    public int currentLevel;
 
     private float speed = 20f;
     private float padding = 5f;
@@ -35,9 +47,17 @@ public class Level : MonoBehaviour
     private float maxTimerEat = 0.25f;
     public int coinCatched = 0;
     public int appleEated = 0;
+    private List<SpriteRenderer> day = new List<SpriteRenderer>();
 
     public static Level current;
-    public State state = State.GAME;
+    public State state = State.TITLE;
+    public bool tuto = false;
+    private bool keyAvailable = true;
+
+    private bool showinGoalPanel = false;
+    private bool hidinGoalPanel = false;
+    private float timerGoal = 0;
+    private float maxTimerGoal = 0.5f;
 
     private void Awake()
     {
@@ -47,24 +67,37 @@ public class Level : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RenderLevel(0);
+        //RenderLevel(0);
     }
 
     public void RenderLevel(int lvl)
     {
+        showinGoalPanel = true;
+        tuto = lvl == 0;
+        keyAvailable = true;
+        Tuto.current.step = 0;
+        if (tuto && PlayerPrefs.GetInt("tutoDone", 0) == 0)
+            Tuto.current.Say();
+        else
+            tuto = false;
+        currentLevel = lvl;
         Life.current.Reset();
         eatin = false;
         rollin = false;
         catchin = false;
         coinCatched = 0;
+        CoinManager.current.UpdateCoins(Level.current.coinCatched);
         appleEated = 0;
         items.ForEach(item => Destroy(item));
         items.Clear();
+        day.ForEach(d => Destroy(d.gameObject));
+        day.Clear();
         noseIdle.SetActive(true);
         noseEating.SetTrigger("reset");
         noseEatingBG.SetTrigger("reset");
         belt.SetTrigger("stop");
         x = 0;
+        day = Font.current.Write("DAY " + (lvl + 1), 7f, 5.25f, transform, 0);
         string lvlStr = levels[lvl].text;
         string[] strs = lvlStr.Split('|');
         string goalStr = strs[0];
@@ -72,24 +105,67 @@ public class Level : MonoBehaviour
         Goal.current.Init(goalStr);
         foreach(string itemStr in itemsStr)
         {
+            // APPLES
             if (itemStr == "A")
             {
                 GameObject itemGO = Instantiate(redApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
                 items.Add(itemGO);
                 x += padding;
             }
+            if (itemStr == "B")
+            {
+                GameObject itemGO = Instantiate(orangeApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+            if (itemStr == "C")
+            {
+                GameObject itemGO = Instantiate(greenApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+            if (itemStr == "D")
+            {
+                GameObject itemGO = Instantiate(yellowApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+
+            // COIN
             if (itemStr == "P")
             {
                 GameObject itemGO = Instantiate(coin, new Vector3(x, -1f, 0), Quaternion.identity, transform);
                 items.Add(itemGO);
                 x += padding;
             }
+
+            // ROTTEN APPLES
             if (itemStr == "a")
             {
                 GameObject itemGO = Instantiate(rottenRedApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
                 items.Add(itemGO);
                 x += padding;
             }
+            if (itemStr == "b")
+            {
+                GameObject itemGO = Instantiate(rottenOrangeApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+            if (itemStr == "c")
+            {
+                GameObject itemGO = Instantiate(rottenGreenApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+            if (itemStr == "d")
+            {
+                GameObject itemGO = Instantiate(rottenYellowApple, new Vector3(x, -1f, 0), Quaternion.identity, transform);
+                items.Add(itemGO);
+                x += padding;
+            }
+
+            // ENEMIES
             if (itemStr == "k")
             {
                 GameObject itemGO = Instantiate(chocolate, new Vector3(x, -1f, 0), Quaternion.identity, transform);
@@ -152,6 +228,8 @@ public class Level : MonoBehaviour
         if (item.tag == "coin")
         {
             coinCatched++;
+            Eyes.current.Do(Eyes.type.STAR);
+            CoinManager.current.UpdateCoins(Level.current.coinCatched);
         }
     }
 
@@ -161,27 +239,138 @@ public class Level : MonoBehaviour
             return;
         item.SetActive(false);
         if (item.tag == "bad")
+        {
             Life.current.LowerFromItem();
+            Eyes.current.Do(Eyes.type.NOPE);
+        }
         else if (item.tag == "apple")
         {
             if (Goal.current.IsInGoal(item.GetComponent<Apple>().type))
             {
+                Eyes.current.Do(Eyes.type.LOVE);
                 Life.current.Add();
                 appleEated++;
             }
             else
+            {
+                Eyes.current.Do(Eyes.type.NOPE);
                 Life.current.LowerFromItem();
+            }                
         } else if (item.tag == "coin")
         {
+            Eyes.current.Do(Eyes.type.NOPE);
             Life.current.LowerFromItem();
         }
     }
 
     private void Update()
     {
+        if (state == State.INTRO)
+        {
+            if (showinGoalPanel)
+            {
+                goalPanel.position = Vector3.MoveTowards(goalPanel.position, new Vector3(-1f, 0f, 0f), Time.deltaTime * speed);
+                if (Vector3.Distance(goalPanel.position, new Vector3(-1f, 0f, 0f)) < 0.1f) {
+                    goalPanel.position = new Vector3(-1f, 0f, 0f);
+                    showinGoalPanel = false;
+                }
+            }
+
+            if (!showinGoalPanel && !hidinGoalPanel)
+            {
+                timerGoal += Time.deltaTime;
+                if (timerGoal >= maxTimerGoal && Input.anyKeyDown)
+                {
+                    timerGoal = 0;
+                    hidinGoalPanel = true;
+                }
+            }
+            if (hidinGoalPanel)
+            {
+                goalPanel.position = Vector3.MoveTowards(goalPanel.position, new Vector3(-1f, -7f, 0f), Time.deltaTime * speed);
+                if (Vector3.Distance(goalPanel.position, new Vector3(-1f, -7f, 0f)) < 0.1f)
+                {
+                    goalPanel.position = new Vector3(-1f, -7f, 0f);
+                    hidinGoalPanel = false;
+                    state = State.GAME;
+                }
+            }
+        }
         if (state != State.GAME)
             return;
-        if (!rollin && !eatin && !catchin)
+        if (!Input.anyKey)
+        {
+            keyAvailable = true;
+        }
+        if (tuto && keyAvailable)
+        {
+            Debug.Log(keyAvailable);
+            if (Tuto.current.step == 1 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+            }
+            else if (Tuto.current.step == 2 && Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                keyAvailable = false;
+                Eat();
+                Tuto.current.Say();
+                return;
+            }
+            else if (Tuto.current.step == 3 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                return;
+            }
+            else if (Tuto.current.step == 4 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                return;
+            }
+            else if (Tuto.current.step == 5 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Eat();
+                Tuto.current.Say();
+                return;
+            }
+            else if (Tuto.current.step == 6 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                return;
+            }
+            else if (Tuto.current.step == 7 && (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)))
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                Roll();
+                return;
+            }
+            else if (Tuto.current.step == 8 && (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow)))
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                Roll();
+                return;
+            }
+            else if (Tuto.current.step == 9 && Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                CatchCoin();
+                return;
+            }
+            else if (Tuto.current.step == 10 && Input.anyKeyDown)
+            {
+                keyAvailable = false;
+                Tuto.current.Say();
+                return;
+            }
+        }
+        if (!tuto && !rollin && !eatin && !catchin)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
@@ -197,6 +386,7 @@ public class Level : MonoBehaviour
                 CatchCoin();
                 return;
             }
+            
         }
 
         if (eatin)
@@ -230,6 +420,19 @@ public class Level : MonoBehaviour
             if (Vector3.Distance(items[0].transform.position, dests[0]) < 0.1f)
             {
                 rollin = false;
+                GameObject item = items.Find(item => Vector3.Distance(new Vector3(0, -1f, 0), item.transform.position) < 1f);
+                if (item == null)
+                {
+                    if (coinCatched >= 3)
+                    {
+                        if (currentLevel + 1 < levels.Length)
+                            PlayerPrefs.SetInt("day", currentLevel + 1);
+                        Debug.Log("saved " + PlayerPrefs.GetInt("day", 0));
+                        DayComplete.current.DoDayComplete();
+                    }
+                    else
+                        GameOver.current.DoGameOver(Reason.COINS);
+                }
                 belt.SetTrigger("stop");
             }
         }

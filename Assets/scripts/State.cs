@@ -1,5 +1,5 @@
 ﻿using System;
 public enum State
 {
-    TITLE, GAME, GAME_OVER, CONGRATS
+    TITLE, INTRO, GAME, GAME_OVER, COMPLETE
 }
