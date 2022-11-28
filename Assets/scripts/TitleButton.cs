@@ -30,11 +30,11 @@ public class TitleButton : MonoBehaviour
 
     private void OnMouseDown()
     {
+        SFX.current.Play(SFX.Type.SELECT);
         if (type == ButtonType.NEW)
             Title.current.StartGame(0);
         else
         {
-            Debug.Log("continue to : " + PlayerPrefs.GetInt("day", 0));
             Title.current.StartGame(PlayerPrefs.GetInt("day", 0));
         }
     }

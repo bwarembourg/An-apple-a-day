@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    [SerializeField] private TextAsset[] levels;
+    [SerializeField] public TextAsset[] levels;
     [SerializeField] private Animator belt;
     [SerializeField] private GameObject noseIdle;
     [SerializeField] private Animator noseEating;
     [SerializeField] private Animator noseEatingBG;
     [SerializeField] private Transform hand;
     [SerializeField] private Transform goalPanel;
+    [SerializeField] private GameObject pressAnyKey;
+
 
     [Header("ITEMS")]
     [SerializeField] private GameObject redApple;
@@ -58,6 +60,9 @@ public class Level : MonoBehaviour
     private bool hidinGoalPanel = false;
     private float timerGoal = 0;
     private float maxTimerGoal = 0.5f;
+    private bool rolledOverCoin = false;
+    private bool catchedCoin = false;
+    private bool swooshed = false;
 
     private void Awake()
     {
@@ -68,10 +73,16 @@ public class Level : MonoBehaviour
     void Start()
     {
         //RenderLevel(0);
+        Font.current.Write("Press any key to start!", -8f, 5f, pressAnyKey.transform, 50, true, false, 8f, true, "ui");
+        pressAnyKey.SetActive(false);
     }
 
     public void RenderLevel(int lvl)
     {
+        Eyes.current.Reset();
+        swooshed = false;
+        rolledOverCoin = false;
+        catchedCoin = false;
         showinGoalPanel = true;
         tuto = lvl == 0;
         keyAvailable = true;
@@ -97,13 +108,14 @@ public class Level : MonoBehaviour
         noseEatingBG.SetTrigger("reset");
         belt.SetTrigger("stop");
         x = 0;
-        day = Font.current.Write("DAY " + (lvl + 1), 7f, 5.25f, transform, 0);
+        string dayStr = lvl + 1 < 10 ? "0" + (lvl + 1) : "" + (lvl + 1);
+        day = Font.current.Write("DAY " + dayStr + "/" + levels.Length, 6.5f, 5.25f, transform, 0);
         string lvlStr = levels[lvl].text;
         string[] strs = lvlStr.Split('|');
         string goalStr = strs[0];
         string[] itemsStr = strs[1].Split('-');
         Goal.current.Init(goalStr);
-        foreach(string itemStr in itemsStr)
+        foreach (string itemStr in itemsStr)
         {
             // APPLES
             if (itemStr == "A")
@@ -195,6 +207,10 @@ public class Level : MonoBehaviour
 
     private void Roll()
     {
+        SFX.current.Play(SFX.Type.ROLL);
+        GameObject rolledItem = items.Find(item => Vector3.Distance(new Vector3(0, -1f, 0), item.transform.position) < 0.1f);
+        if (rolledItem.tag == "coin" && !catchedCoin)
+            rolledOverCoin = true;
         belt.SetTrigger("roll");
         rollin = true;
         dests.Clear();
@@ -202,6 +218,7 @@ public class Level : MonoBehaviour
         {
             dests.Add(item.transform.position - new Vector3(5f, 0, 0));
         }
+        catchedCoin = false;
     }
 
     private void Eat()
@@ -227,9 +244,11 @@ public class Level : MonoBehaviour
         item.SetActive(false);
         if (item.tag == "coin")
         {
+            SFX.current.Play(SFX.Type.COIN);
             coinCatched++;
             Eyes.current.Do(Eyes.type.STAR);
             CoinManager.current.UpdateCoins(Level.current.coinCatched);
+            catchedCoin = true;
         }
     }
 
@@ -260,6 +279,7 @@ public class Level : MonoBehaviour
         {
             Eyes.current.Do(Eyes.type.NOPE);
             Life.current.LowerFromItem();
+            GameOver.current.DoGameOver(Reason.COIN_MISSED);
         }
     }
 
@@ -269,6 +289,11 @@ public class Level : MonoBehaviour
         {
             if (showinGoalPanel)
             {
+                if (!swooshed)
+                {
+                    SFX.current.Play(SFX.Type.SWOOSH_IN);
+                    swooshed = true;
+                }
                 goalPanel.position = Vector3.MoveTowards(goalPanel.position, new Vector3(-1f, 0f, 0f), Time.deltaTime * speed);
                 if (Vector3.Distance(goalPanel.position, new Vector3(-1f, 0f, 0f)) < 0.1f) {
                     goalPanel.position = new Vector3(-1f, 0f, 0f);
@@ -279,10 +304,13 @@ public class Level : MonoBehaviour
             if (!showinGoalPanel && !hidinGoalPanel)
             {
                 timerGoal += Time.deltaTime;
+                pressAnyKey.SetActive(true);
                 if (timerGoal >= maxTimerGoal && Input.anyKeyDown)
                 {
+                    SFX.current.Play(SFX.Type.SWOOSH_OUT);
                     timerGoal = 0;
                     hidinGoalPanel = true;
+                    pressAnyKey.SetActive(false);
                 }
             }
             if (hidinGoalPanel)
@@ -386,6 +414,11 @@ public class Level : MonoBehaviour
                 CatchCoin();
                 return;
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                state = State.INTRO;
+                RenderLevel(currentLevel);
+            }
             
         }
 
@@ -420,6 +453,8 @@ public class Level : MonoBehaviour
             if (Vector3.Distance(items[0].transform.position, dests[0]) < 0.1f)
             {
                 rollin = false;
+                if (rolledOverCoin)
+                    GameOver.current.DoGameOver(Reason.COIN_MISSED);
                 GameObject item = items.Find(item => Vector3.Distance(new Vector3(0, -1f, 0), item.transform.position) < 1f);
                 if (item == null)
                 {

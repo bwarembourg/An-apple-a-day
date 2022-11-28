@@ -13,6 +13,7 @@ public class Goal : MonoBehaviour
     [SerializeField] private Sprite yellow;
     [SerializeField] private Transform goalPanel;
 
+
     private List<GameObject> icons = new List<GameObject>();
     private string goals;
 

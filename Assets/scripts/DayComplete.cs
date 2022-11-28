@@ -19,6 +19,7 @@ public class DayComplete : MonoBehaviour
 
     private List<SpriteRenderer> appleFont = new List<SpriteRenderer>();
     private List<SpriteRenderer> coinFont = new List<SpriteRenderer>();
+    private List<SpriteRenderer> dayFont = new List<SpriteRenderer>();
 
     private void Awake()
     {
@@ -28,19 +29,17 @@ public class DayComplete : MonoBehaviour
     private void Start()
     {
         camera = GameObject.FindGameObjectWithTag("MainCamera").transform;
-        List<SpriteRenderer> niceGame = Font.current.Write("Nice game!", -4f, 0.5f, gameOverPanel.transform, 8,
-            true, false, 4f, true, "uistate");
-        niceGame.ForEach(f => f.color = blue);
         Font.current.Write("Press any key to start next day!", -6f, -4f, pressAnyKey.transform, 8, true, false, 6f, true, "uistate");
     }
 
     public void DoDayComplete()
     {
-        //TODO If it was last level -> Game Complete
         appleFont.ForEach(f => Destroy(f.gameObject));
         appleFont.Clear();
         coinFont.ForEach(f => Destroy(f.gameObject));
         coinFont.Clear();
+        dayFont.ForEach(f => Destroy(f.gameObject));
+        dayFont.Clear();
         Level.current.state = State.COMPLETE;
         appleBG.Activate();
         gameOverPanel.SetActive(true);
@@ -51,9 +50,17 @@ public class DayComplete : MonoBehaviour
     {
         if (Input.anyKeyDown && Level.current.state == State.COMPLETE && !showing)
         {
-            Level.current.RenderLevel(Level.current.currentLevel + 1);
+            SFX.current.Play(SFX.Type.SELECT);
             gameOverPanel.SetActive(false);
-            hiding = true;
+            if (Level.current.currentLevel + 1 < Level.current.levels.Length)
+            {
+                Level.current.RenderLevel(Level.current.currentLevel + 1);
+                hiding = true;
+            }
+            else
+            {
+                GameComplete.current.DoGameComplete();
+            }
         }
         if (showing)
         {
@@ -65,7 +72,10 @@ public class DayComplete : MonoBehaviour
                 appleFont.ForEach(f => f.color = blue);
                 coinFont = Font.current.Write("x" + Level.current.coinCatched + "/3", 0, -1.75f, gameOverPanel.transform, 8, true, false, 0, false, "uistate");
                 coinFont.ForEach(f => f.color = blue);
-
+                string dayStr = Level.current.currentLevel + 1 < 10 ? "0" + (Level.current.currentLevel + 1) : "" + (Level.current.currentLevel + 1);
+                dayFont = Font.current.Write("Day " + dayStr + "/" + Level.current.levels.Length + " complete!", -4f, 0.5f,
+                    gameOverPanel.transform, 8, true, false, 4f, true, "uistate");
+                dayFont.ForEach(f => f.color = blue);
             }
         }
         if (hiding)

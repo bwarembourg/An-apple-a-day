@@ -52,6 +52,7 @@ public class GameOver : MonoBehaviour
     {
         if (Input.anyKeyDown && Level.current.state == State.GAME_OVER && !showing)
         {
+            SFX.current.Play(SFX.Type.SELECT);
             Debug.Log("restart");
             Level.current.RenderLevel(Level.current.currentLevel);
             gameOverPanel.SetActive(false);
@@ -90,6 +91,7 @@ public class GameOver : MonoBehaviour
         switch (reason)
         {
             case Reason.COINS: return "Not enough coins for Charlie...";
+            case Reason.COIN_MISSED: return "Too bad! You missed a coin...";
             case Reason.TOO_MUCH: return "Too much apples for Charlie...";
             default: return "Not enough apples for Charlie...";
         }

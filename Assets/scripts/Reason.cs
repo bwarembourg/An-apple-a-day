@@ -1,5 +1,5 @@
 ﻿using System;
 public enum Reason
 {
-    TOO_MUCH, NOT_ENOUGH, COINS
+    TOO_MUCH, NOT_ENOUGH, COINS, COIN_MISSED
 }
