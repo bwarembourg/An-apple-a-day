@@ -48,6 +48,7 @@ public class Title : MonoBehaviour
 
     public void StartGame(int level)
     {
+        Music.current.PlayRandom();
         lvl = level;
         Level.current.RenderLevel(level);
         titlePanel.SetActive(false);

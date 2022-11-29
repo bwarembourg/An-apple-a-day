@@ -336,6 +336,7 @@ public class Level : MonoBehaviour
             if (Tuto.current.step == 1 && Input.anyKeyDown)
             {
                 keyAvailable = false;
+                SFX.current.Play(SFX.Type.SELECT);
                 Tuto.current.Say();
             }
             else if (Tuto.current.step == 2 && Input.GetKeyDown(KeyCode.DownArrow))
@@ -348,16 +349,18 @@ public class Level : MonoBehaviour
             else if (Tuto.current.step == 3 && Input.anyKeyDown)
             {
                 keyAvailable = false;
+                SFX.current.Play(SFX.Type.SELECT);
                 Tuto.current.Say();
                 return;
             }
             else if (Tuto.current.step == 4 && Input.anyKeyDown)
             {
                 keyAvailable = false;
+                SFX.current.Play(SFX.Type.SELECT);
                 Tuto.current.Say();
                 return;
             }
-            else if (Tuto.current.step == 5 && Input.anyKeyDown)
+            else if (Tuto.current.step == 5 && Input.GetKeyDown(KeyCode.DownArrow))
             {
                 keyAvailable = false;
                 Eat();
@@ -367,6 +370,7 @@ public class Level : MonoBehaviour
             else if (Tuto.current.step == 6 && Input.anyKeyDown)
             {
                 keyAvailable = false;
+                SFX.current.Play(SFX.Type.SELECT);
                 Tuto.current.Say();
                 return;
             }
@@ -394,6 +398,7 @@ public class Level : MonoBehaviour
             else if (Tuto.current.step == 10 && Input.anyKeyDown)
             {
                 keyAvailable = false;
+                SFX.current.Play(SFX.Type.SELECT);
                 Tuto.current.Say();
                 return;
             }

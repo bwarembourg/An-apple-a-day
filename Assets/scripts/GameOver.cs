@@ -53,6 +53,7 @@ public class GameOver : MonoBehaviour
         if (Input.anyKeyDown && Level.current.state == State.GAME_OVER && !showing)
         {
             SFX.current.Play(SFX.Type.SELECT);
+            Music.current.PlayRandom();
             Debug.Log("restart");
             Level.current.RenderLevel(Level.current.currentLevel);
             gameOverPanel.SetActive(false);
