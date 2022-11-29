@@ -35,6 +35,7 @@ public class GameOver : MonoBehaviour
 
     public void DoGameOver(Reason reason)
     {
+        Music.current.PlayGameOver();
         reasonFont.ForEach(f => Destroy(f.gameObject));
         reasonFont.Clear();
         appleFont.ForEach(f => Destroy(f.gameObject));
@@ -54,7 +55,6 @@ public class GameOver : MonoBehaviour
         {
             SFX.current.Play(SFX.Type.SELECT);
             Music.current.PlayRandom();
-            Debug.Log("restart");
             Level.current.RenderLevel(Level.current.currentLevel);
             gameOverPanel.SetActive(false);
             hiding = true;

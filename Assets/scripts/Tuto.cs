@@ -28,7 +28,6 @@ public class Tuto : MonoBehaviour
     public void Say()
     {
         step++;
-        Debug.Log("say " + step);
         if (bubble != null)
             Destroy(bubble);
         text.ForEach(t => Destroy(t.gameObject));

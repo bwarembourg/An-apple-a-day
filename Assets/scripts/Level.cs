@@ -209,7 +209,7 @@ public class Level : MonoBehaviour
     {
         SFX.current.Play(SFX.Type.ROLL);
         GameObject rolledItem = items.Find(item => Vector3.Distance(new Vector3(0, -1f, 0), item.transform.position) < 0.1f);
-        if (rolledItem.tag == "coin" && !catchedCoin)
+        if (rolledItem != null && rolledItem.tag == "coin" && !catchedCoin)
             rolledOverCoin = true;
         belt.SetTrigger("roll");
         rollin = true;
@@ -332,7 +332,6 @@ public class Level : MonoBehaviour
         }
         if (tuto && keyAvailable)
         {
-            Debug.Log(keyAvailable);
             if (Tuto.current.step == 1 && Input.anyKeyDown)
             {
                 keyAvailable = false;
@@ -467,7 +466,6 @@ public class Level : MonoBehaviour
                     {
                         if (currentLevel + 1 < levels.Length)
                             PlayerPrefs.SetInt("day", currentLevel + 1);
-                        Debug.Log("saved " + PlayerPrefs.GetInt("day", 0));
                         DayComplete.current.DoDayComplete();
                     }
                     else

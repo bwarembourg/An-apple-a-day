@@ -3326,7 +3326,7 @@ MonoBehaviour:
   appleBG: {fileID: 1269827931}
   continueBtn: {fileID: 823963714}
   resetTuto: 1
-  resetGame: 0
+  resetGame: 1
   green: {r: 0.44313726, g: 0.67058825, b: 0.44313726, a: 1}
   pressAnyKey: {fileID: 1847119767}
 --- !u!1 &554994901
@@ -8243,7 +8243,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5b82f05828dcf4663a29293961d72b15, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.3
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -8335,7 +8335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578154022}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.5719695, y: 8.831771, z: -0.20178102}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8356,7 +8356,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musics:
   - {fileID: 8300000, guid: 84ec2f4f1911247088dd2849bb17e5a7, type: 3}
+  - {fileID: 8300000, guid: 1ac15b0cfda5a4561b2dc5a4f71eacf6, type: 3}
   - {fileID: 8300000, guid: 5b82f05828dcf4663a29293961d72b15, type: 3}
+  gameover: {fileID: 8300000, guid: 803df18c54c12469781e98ea90b48751, type: 3}
 --- !u!1 &1601036231
 GameObject:
   m_ObjectHideFlags: 0
@@ -10156,6 +10158,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6b738931c538a40cba7bef85b4c39c91, type: 3}
   - {fileID: 8300000, guid: d7b08c7097fb44c0784ff914d7c17f81, type: 3}
   - {fileID: 8300000, guid: b8317005916484294a37e4f2000066e0, type: 3}
+  dayComplete: {fileID: 8300000, guid: a626522a850d44f9b9e1c4df451f52c4, type: 3}
 --- !u!4 &1778765767
 Transform:
   m_ObjectHideFlags: 0
@@ -10164,7 +10167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1778765757}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.9245048, y: 12.862198, z: -0.040047176}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

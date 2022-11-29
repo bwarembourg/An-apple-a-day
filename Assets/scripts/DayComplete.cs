@@ -34,6 +34,7 @@ public class DayComplete : MonoBehaviour
 
     public void DoDayComplete()
     {
+        SFX.current.Play(SFX.Type.DAY_COMPLETE);
         appleFont.ForEach(f => Destroy(f.gameObject));
         appleFont.Clear();
         coinFont.ForEach(f => Destroy(f.gameObject));
