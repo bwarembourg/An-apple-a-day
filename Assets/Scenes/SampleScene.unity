@@ -3325,8 +3325,8 @@ MonoBehaviour:
   titlePanel: {fileID: 1269827929}
   appleBG: {fileID: 1269827931}
   continueBtn: {fileID: 823963714}
-  resetTuto: 1
-  resetGame: 1
+  resetTuto: 0
+  resetGame: 0
   green: {r: 0.44313726, g: 0.67058825, b: 0.44313726, a: 1}
   pressAnyKey: {fileID: 1847119767}
 --- !u!1 &554994901
